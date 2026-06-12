@@ -11,7 +11,7 @@ export default function BrowserViewer() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const socket = io("http://localhost:5000");
+    const socket = io(process.env.NEXT_PUBLIC_API_URL);
     socketRef.current = socket;
 
     socket.on("connect", () => setIsConnected(true));

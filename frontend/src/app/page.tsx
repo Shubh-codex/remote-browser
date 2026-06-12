@@ -4,7 +4,7 @@ import BrowserViewer from "@/Components/BrowserViewer";
 
 export default function Home() {
   const startBrowser = async () => {
-    await fetch("http://localhost:5000/start", { method: "POST" });
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/start`, { method: "POST" });
   };
 
   return (
