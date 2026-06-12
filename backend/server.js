@@ -31,6 +31,10 @@ app.post("/stop", async (req, res) => {
   res.json({ success: true });
 });
 
+app.get("/", (req, res) => {
+  res.send("Remote Browser Backend Running");
+});
+
 io.on("connection", socket => {
   console.log("Client connected");
 
