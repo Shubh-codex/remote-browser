@@ -11,21 +11,30 @@ export default function BrowserViewer() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const socket = io(process.env.NEXT_PUBLIC_API_URL);
-    socketRef.current = socket;
+  const socket = io(process.env.NEXT_PUBLIC_API_URL);
+  socketRef.current = socket;
 
-    socket.on("connect", () => setIsConnected(true));
-    socket.on("disconnect", () => setIsConnected(false));
+  socket.on("connect", () => {
+    setIsConnected(true);
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/start`, { method: "POST" });
+  });
 
-    socket.on("frame", (frame: string) => {
-      setImage(`data:image/jpeg;base64,${frame}`);
-      setIsLoading(false);
-    });
+  socket.on("disconnect", () => setIsConnected(false));
 
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  socket.on("frame", (frame: string) => {
+    setImage(`data:image/jpeg;base64,${frame}`);
+    setIsLoading(false);
+  });
+
+  socket.on("navigate_error", (data: { message: string }) => {
+    console.error("Navigate error:", data.message);
+    setIsLoading(false);
+  });
+
+  return () => {
+    socket.disconnect();
+  };
+}, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
